@@ -1,0 +1,121 @@
+* {
+	margin: 0;
+	padding: 0;
+}
+
+html, body {
+	width: 100%;
+	height: 100%;
+}
+
+/****************************
+ **   Styles for start page  **
+ ****************************/
+
+#start {
+	background: url("assets/agsquare.png");
+	background-repeat: repeat;
+	z-index: 10;
+	position: absolute;
+	top: 0;
+	left: 0;
+	width: 100%;
+	height: 100%;
+	overflow: auto;
+}
+
+#info {
+	width: 100%;
+	height: 40%;
+	-webkit-columns: 30% 3; /* Safari and Chrome */
+	-moz-columns: 30% 3; /* Firefox */
+	columns: 30% 3;
+
+}
+
+h1, h2 {
+	text-shadow: #ffffff -1px 1px, #ffffff -2px 2px, #ffffff -3px 3px, #ffffff -4px 4px, #ffffff -5px 5px;
+	color:  #FF5800;
+	font-family: 'Share Tech', sans-serif;
+	font-size: 70px;
+	padding: 30px;
+	font-weight: normal;
+}
+
+h1 {
+	font-size: 100px;
+	display: inline;
+}
+
+#chooser {
+	width:  100%;
+	height: 60%;
+	text-align: center;
+}
+
+.step {
+	display: inline-block;
+	width: 500px;
+	text-shadow: #ffffff -1px 1px, #ffffff -2px 2px, #ffffff -3px 3px, #ffffff -4px 4px, #ffffff -5px 5px;
+	color:  #FF5800;
+	font-family: 'Share Tech', sans-serif;
+	font-size: 52px;
+}
+
+#a, #b, #equation {
+	font-size: 30px;
+	display: inline;
+	size: 4;
+	-moz-border-radius:10px;
+	-webkit-border-radius:10px;
+	border-radius:10px;
+}
+
+
+#steps {
+	text-align: center;
+	margin-left: 30px;
+	margin-right: 30px;
+}
+
+option, select {
+	background-color: #ffffff;
+	font-size:  40px;
+}
+
+.explore_button {
+	-moz-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	-webkit-box-shadow:inset 0px 1px 0px 0px #ffffff;
+	box-shadow:inset 0px 1px 0px 0px #ffffff;
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ff5800), color-stop(1, #ff4000) );
+	background:-moz-linear-gradient( center top, #ff5800 5%, #ff4000 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff5800', endColorstr='#ff4000');
+	background-color:#ff5800;
+	-moz-border-radius:20px;
+	-webkit-border-radius:20px;
+	border-radius:20px;
+	border:1px solid #ffffff;
+	display:inline-block;
+	color:#ffffff;
+	font-family:arial;
+	font-size:52px;
+	font-weight:bold;
+	padding:40px 50px;
+	text-decoration:none;
+	text-shadow:1px 1px 0px #807780;
+}.explore_button:hover {
+	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ff4000), color-stop(1, #ff5800) );
+	background:-moz-linear-gradient( center top, #ff4000 5%, #ff5800 100% );
+	filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff4000', endColorstr='#ff5800');
+	background-color:#ff4000;
+}.explore_button:active {
+	position:relative;
+	top:1px;
+}
+
+
+
+/****************************
+ ** Styles for fractal page  **
+ ****************************/
+

@@ -1,9 +1,49 @@
 <!DOCTYPE html>
 <html>
 <head>
-	<title>Mandlebrot/Julia Visualizer</title>
+	<script src="index.js" type="text/javascript"></script>
+	<link href='http://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
+	<link rel="stylesheet" type="text/css" href="index.css">
+	<title>Mandlebrot/Julia Explorer</title>
 </head>
 <body>
+	<div id="start">
+		<div id="info">
+			<h2>
+				Mandlebrot / Julia Explorer
+			</h2>
+		</div>
+		<div id="chooser">
+			<div id="steps>"
+				<div id="type" class="step">
+					Pick an Equation:
+					<br />
+					<select id="equation">
+						<option value="mandlebrot" selected="selected">Mandlebrot Set</option>
+						<option value="Julia">Julia Sets</option>
+					</select>
+				</div>
+				&nbsp;
+				<h1>&#10140;</h1>
+				&nbsp;
 
+				<div id="values" class="step">
+					Choose a C value:
+					<br />
+					C = <input id="a" size="4"> + <input id="b" size="4"> <i>i</i>
+				</div>
+				&nbsp;
+
+				<h1>&#10140;</h1>
+				&nbsp;
+
+				<div id="go" class="step">
+					<a href="#" id="explore_button" class="explore_button"> 
+						Explore!
+					</a>
+				</div>
+			</div>
+		</div>
+	</div>
 </body>
 </html>
