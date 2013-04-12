@@ -1,16 +1,24 @@
 <!DOCTYPE html>
 <html>
 <head>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/dat-gui/0.5/dat.gui.min.js"></script>
+	<script src="http://cdnjs.cloudflare.com/ajax/libs/zepto/1.0/zepto.min.js" ></script>
+	<script src="assets/biginteger.js"></script>
+	<script src="assets/schemeNumber.js"></script>
 	<script src="index.js" type="text/javascript"></script>
 	<link href='http://fonts.googleapis.com/css?family=Share+Tech' rel='stylesheet' type='text/css'>
 	<link rel="stylesheet" type="text/css" href="index.css">
-	<title>Mandlebrot/Julia Explorer</title>
+	<title>Mandelbrot/Julia Explorer</title>
 </head>
 <body>
+	<div id="explorer">
+		<canvas id="explorer_graph">
+		</canvas>
+	</div>
 	<div id="start">
 		<div id="info">
 			<h2>
-				Mandlebrot / Julia Explorer
+				Mandelbrot / Julia Explorer
 			</h2>
 		</div>
 		<div id="chooser">
@@ -19,12 +27,13 @@
 					Pick an Equation:
 					<br />
 					<select id="equation">
-						<option value="mandlebrot" selected="selected">Mandlebrot Set</option>
-						<option value="Julia">Julia Sets</option>
+						<option value="mandelbrot" selected="selected">Mandelbrot Set</option>
+						<option value="julia">Julia Sets</option>
 					</select>
 				</div>
 				&nbsp;
-				<h1>&#10140;</h1>
+				<h1 class="arrow">&#10140;</h1>
+				<div class="spacer"></div>
 				&nbsp;
 
 				<div id="values" class="step">
@@ -34,7 +43,8 @@
 				</div>
 				&nbsp;
 
-				<h1>&#10140;</h1>
+				<h1 class="arrow">&#10140;</h1>
+				<div class="spacer"></div>
 				&nbsp;
 
 				<div id="go" class="step">

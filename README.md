@@ -1,4 +1,4 @@
-Julia-Mandlebrot-Sets
+Julia-mandelbrot-Sets
 =====================
 
-Beautiful visualizations of Julia and Mandlebrot sets. HTML5, Canvas, JS. Work-in-progress, so nothing's ready yet.
+Beautiful visualizations of Julia and Mandelbrot sets. HTML5, Canvas, JS. Work-in-progress, so nothing's ready yet.
