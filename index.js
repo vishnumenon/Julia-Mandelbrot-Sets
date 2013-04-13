@@ -7,7 +7,7 @@ $(document).ready(function() {
 		$('#explorer_graph').attr('width', window.innerWidth);
 		$('#explorer_graph').attr('height', window.innerHeight);
 		mje = new Grapher($("#equation").val(), $("#a").val(), $("#b").val(), $('#explorer_graph')[0], $('#explorer_graph')[0].getContext('2d'));
-		mje.graph();
+		setTimeout(mje.graph(), 1);
 		return false;
 	});
 });
@@ -23,28 +23,33 @@ function Grapher(type, a, b, canvas, ctx) {
 	this.context = ctx;
 	this.c = function() { return g.sn(g.a+"+"+g.b+"i"); };
 	this.z = null;
-	this.xmin = -10;
-	this.xmax = 10;
-	this.ymin = -10;
-	this.ymax = 10;
+	this.amin = -10;
+	this.amax = 10;
+	this.bmin = -10;
+	this.bmax = 10;
 }
 
+Grapher.prototype.translate = function(x, y) {
+	return {
+		a: ((this.amax - this.amin) / this.canvas.width)  *  x + this.amin,
+		b: ((this.bmax - this.bmin) / this.canvas.height) * (this.canvas.height - y) + this.bmin
+	};
+};
+
+Grapher.prototype.getColor = function(point) {
+	return [Math.floor(Math.random() * (255 - 0 + 1)) + 0, Math.floor(Math.random() * (255 - 0 + 1)) + 0, Math.floor(Math.random() * (255 - 0 + 1)) + 0];
+};
+
 Grapher.prototype.graph = function() {
-	var id = this.context.createImageData(1,1);
-	var d  = id.data;
-	var color;
+	var imagedata = this.context.createImageData(this.canvas.width, this.canvas.height);
 	for(var x = 0; x<this.canvas.width; x++) {
 		for(var y = 0;  y<this.canvas.height; y++) {
 			color  = this.getColor(this.translate(x, y));
-			d[0]   = color[0];
-			d[1]   = color[1];
-			d[2]   = color[2];
-			d[3]   = color[3];
-			this.context.putImageData( id, x, y );
+			imagedata.data[(y*4*imagedata.width) + x*4] = color[0];
+			imagedata.data[(y*4*imagedata.width) + x*4 + 1] = color[1];
+			imagedata.data[(y*4*imagedata.width) + x*4 + 2] = color[2];
+			imagedata.data[(y*4*imagedata.width) + x*4 + 3] = 255;
 		}
 	}
-};
-
-Grapher.prototype.zs = {
-
+	this.context.putImageData(imagedata, 0,0);
 };
