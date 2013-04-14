@@ -1,81 +1,108 @@
-var mje;
+// var mje;
+
+// $(document).ready(function() {
+// 	$('#explore_button').on('click', function(e) {
+// 		e.preventDefault();
+// 		$('#start').hide();
+// 		$('#explorer_graph').attr('width', $(window).width());
+// 		$('#explorer_graph').attr('height', $(window).height());
+// 		var workers = [];
+// 		var workerBounds = [];
+// 		var width = $('#explorer_graph')[0].width;
+// 		var height = $('#explorer_graph')[0].height;
+// 		var pixelArrayLength = width * height * 4;
+// 		var interval = pixelArrayLength / 16;
+// 		for(var i = 0; i<16; i++) {
+// 			workers[i] = new Worker("graphworker.js");
+// 			workerBounds[i] = {start: i * interval, end: ((i+1) * interval) - 1};
+// 			workers[i].addEventListener('message', function(e) {
+// 				console.log(e.data);
+// 				graph(e.data.data, e.data.start, $('#explorer_graph')[0], $('#explorer_graph')[0].getContext('2d'));
+// 			}, false);
+// 			workers[i].onerror = function(event){
+// 				throw new Error(event.message + " (" + event.filename + ":" + event.lineno + ")");
+// 			};
+// 			workers[i].postMessage({start: workerBounds[i].start, end: workerBounds[i].end, type: $("#equation").val(), a: $("#a").val(), b: $("#b").val(), width: $('#explorer_graph')[0].width, height: $('#explorer_graph')[0].height});
+// 		}
+
+// 		return false;
+// 	});
+// });
+
+// function graph(data, offset, canvas, context) {
+// 	var imgdata = context.getImageData(0, 0, width, height);
+// 	imgdata.data.set(data, offset);
+// 	context.putImageData(imgdata, 0, 0);
+// }
 
 $(document).ready(function() {
-	$('#explore_button').on('click', function(e) {
-		e.preventDefault();
-		$('#start').hide();
-		$('#explorer_graph').attr('width', $(window).width());
-		$('#explorer_graph').attr('height', $(window).height());
-		mje = new Grapher($("#equation").val(), $("#a").val(), $("#b").val(), $('#explorer_graph')[0], $('#explorer_graph')[0].getContext('2d'));
-		mje.graph();
-		return false;
-	});
+$('#start').hide();
+var complex = function() {
+    var that = {};
+    that.add = function( a, b ) {
+	return { r: a.r + b.r,
+		 i: a.i + b.i };
+    }
+
+    that.subtract = function( a, b ) {
+	return { r: a.r - b.r, i: a.i - b.i };
+    }
+
+    that.multiply = function( a,b ) {
+	return {r: a.r*b.r - a.i*b.i, 
+		i: a.i*b.r + a.r*b.i };
+    }
+
+    that.toString = function(a) {
+	return "" + a.r + "+" + a.i + "i";
+    }
+
+    that.abs = function(a) {
+	return Math.sqrt( a.r*a.r + a.i*a.i );
+    }
+
+    that.abs2 = function(a) {
+	return a.r*a.r + a.i*a.i;
+    }
+
+    return that;
+};
+var Complex = complex();
+
+var width = 600;
+var height = 400;
+
+var c = document.getElementById("explorer_graph");
+var ctx = c.getContext("2d");
+c.width = width;
+c.height = height;
+
+
+var imgData = ctx.createImageData(width,height);
+var i;
+var row, column;
+var topLeft = {r: -2, i: 1};
+var bottomRight = {r:1,i:-1};
+var drow = (bottomRight.i - topLeft.i)/height;
+var dcol = (bottomRight.r - topLeft.r)/width;
+var iter;
+var maxIter = 300;
+for( row = 0; row < height; row++ ) {
+    for (column = 0; column < width; column++ ) {
+	var p = {r: topLeft.r + column*dcol, i: topLeft.i + row*drow };
+	var v = {r: 0, i: 0}
+	iter = 0;
+	while ( Complex.abs2(v) < 4 && iter < maxIter) {
+	    v = Complex.add( Complex.multiply( v, v), p);
+	    iter++;
+	}
+
+	var index = (row*width + column)*4;
+	imgData.data[index+0] = iter % 255;
+	imgData.data[index+1] = iter % 255;
+	imgData.data[index+2] = iter % 255;
+	imgData.data[index+3] = 255;
+    }
+    ctx.putImageData(imgData, 0,0 );
+}
 });
-
-function graph(imgdata, canvas, context) {	
-	
-
-}
-
-function Grapher(type, a, b, canvas, ctx) {
-	var g = this;
-	this.sn = SchemeNumber;
-	this.fn = this.sn.fn;
-	this.type = type;
-	this.a = a;
-	this.b = b;
-	this.canvas = canvas;
-	this.width = this.sn(this.canvas.width.toString());
-	this.height = this.sn(this.canvas.height.toString());
-	this.context = ctx;
-	this.c = function() { return g.sn(g.a+"+"+g.b+"i"); };
-	this.z = null;
-	this.amin = this.sn("-10");
-	this.amax = this.sn("10");
-	this.bmin = this.sn("-10");
-	this.bmax = this.sn("10");
-}
-
-Grapher.prototype.translate = function(x, y) {
-	return {
-		a: this.fn["+"](
-			this.fn["*"](
-				this.fn["/"](
-					this.fn["-"](
-						this.amax,
-						this.amin),
-					this.width
-					),
-				x
-				),
-			this.amin
-			),
-		b: this.fn["+"](
-			this.fn["*"](
-				this.fn["/"](
-					this.fn["-"](
-						this.bmax,
-						this.bmin),
-					this.height
-					),
-				this.fn["-"](
-					this.height,
-					y
-					)
-				),
-			this.bmin
-			)
-	};
-};
-
-Grapher.prototype.getColor = function(point) {
-	return [Math.floor(Math.random() * (255 - 0 + 1)) + 0, Math.floor(Math.random() * (255 - 0 + 1)) + 0, Math.floor(Math.random() * (255 - 0 + 1)) + 0];
-};
-
-Grapher.prototype.graph = function() {
-	var gw = new Worker("graphworker.js");
-	gw.addEventListener('message', function(e) {
-		this.context.putImageData(e.data, 0,0);
-	}, false);
-	gw.postMessage({imagedata: this.context.createImageData(this.canvas.width, this.canvas.height), sn: this.sn, getColor: this.getColor, translate: this.translate});
-};
