@@ -126,7 +126,7 @@ option, select {
 	font-weight:bold;
 	padding:30px 40px;
 	text-decoration:none;
-	text-shadow:1px 1px 0px #807780;
+	text-shadow:1px 1px 0 #807780;
 }.explore_button:hover {
 	background:-webkit-gradient( linear, left top, left bottom, color-stop(0.05, #ff4000), color-stop(1, #ff5800) );
 	background:-moz-linear-gradient( center top, #ff4000 5%, #ff5800 100% );
@@ -143,3 +143,39 @@ option, select {
  ** Styles for fractal page  **
  ****************************/
 
+#toImage {
+	position: absolute;
+	cursor: pointer;
+	right: 60px;
+	bottom: 60px;
+	width: 60px;
+	height: 60px;
+	z-index: 5;
+	color: white;
+	background: black;
+	-webkit-border-radius: 10px;
+	-webkit-box-shadow:  -3px -3px 5px 2px rgba(255, 255, 255, 255);
+	-moz-box-shadow:  -3px -3px 5px 2px rgba(255, 255, 255, 255);
+	border-radius: 10px;
+        	box-shadow:  -3px -3px 5px 2px rgba(255, 255, 255, 255);
+        	text-align: center;
+        	line-height: 60px;
+        	font-family: 'Share Tech', sans-serif;
+}
+
+#explorer_graph, #controls {
+	position: absolute;
+	top: 0;
+	left: 0;
+	margin: 0;
+	padding: 0;
+}
+
+#controls:hover {
+	cursor: crosshair;
+	z-index: 2;
+}
+
+.dg {
+	z-index: 15 !important;
+}
