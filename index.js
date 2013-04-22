@@ -6,14 +6,7 @@ $(document).ready(function() {
 		e.preventDefault();
 		MJE.width = $(window).width();
 		MJE.height = $(window).height();
-		MJE.amin  = -2;
-		MJE.amax  = 2;
-		MJE.bmin  = (MJE.height / MJE.width) * -2;
-		MJE.bmax  = (MJE.height / MJE.width) * 2;
-		MJE.colors = {};
-		MJE.darkToLight = false;
-		MJE.divergesColor = [244,244,244,255];
-		MJE.convergesColor = [255,58,0,255];
+		setDefualts();
 		MJE.canvas = $('#explorer_graph')[0];
 		MJE.ctx = MJE.canvas.getContext('2d');
 		MJE.canvas.setAttribute('width', MJE.width);
@@ -23,13 +16,7 @@ $(document).ready(function() {
 		MJE.cb = parseFloat($('#b').val());
 		MJE.redraw = function() { drawGraph(); };
 		MJE.reset = function() {
-			MJE.amin  = -2;
-			MJE.amax  = 2;
-			MJE.bmin  = (MJE.height / MJE.width) * -2;
-			MJE.bmax  = (MJE.height / MJE.width) * 2;
-			MJE.darkToLight = false;
-			MJE.divergesColor = [255,255,255,255];
-			MJE.convergesColor = [255,58,0,255];
+			setDefualts();
 			drawGraph();
 		};
 		MJE.newEquation = function() {
@@ -66,6 +53,16 @@ $(document).ready(function() {
 	});
 });
 
+function setDefualts() {
+	MJE.amin  = -2;
+	MJE.amax  = 2;
+	MJE.bmin  = (MJE.height / MJE.width) * -2;
+	MJE.bmax  = (MJE.height / MJE.width) * 2;
+	MJE.darkToLight = false;
+	MJE.divergesColor = [255,255,255,255];
+	MJE.convergesColor = [255,58,0,255];
+}
+
 function getA(x, min, max, width) {
 	return (x * ((max - min) / width)) + min;
 }
@@ -79,21 +76,7 @@ function drawGraph() {
 	for(var i = 0; i<8; i++) {
 		var worker = new Worker("graphworker.js");
 		worker.addEventListener('message', createCallback(worker));
-		worker.postMessage({
-			amin: MJE.amin,
-			amax: MJE.amax,
-			bmin: MJE.bmin,
-			bmax: MJE.bmax,
-			row: --MJE.rows,
-			type: MJE.type,
-			width: MJE.width,
-			height: MJE.height,
-			divergesColor: MJE.divergesColor,
-			convergesColor: MJE.convergesColor,
-			darkToLight: MJE.darkToLight,
-			ca: MJE.ca,
-			cb: MJE.cb
-		});
+		worker.postMessage(generateMessage());
 
 	}
 
@@ -105,21 +88,25 @@ function createCallback(worker) {
 		imageData.data.set(response.data.data);
 		MJE.ctx.putImageData(imageData, 0, response.data.row);
 		if(MJE.rows > 0) {
-			worker.postMessage({
-				amin: MJE.amin,
-				amax: MJE.amax,
-				bmin: MJE.bmin,
-				bmax: MJE.bmax,
-				row: --MJE.rows,
-				type: MJE.type,
-				width: MJE.width,
-				height: MJE.height,
-				divergesColor: MJE.divergesColor,
-				convergesColor: MJE.convergesColor,
-				darkToLight: MJE.darkToLight,
-				ca: MJE.ca,
-				cb: MJE.cb
-			});
+			worker.postMessage(generateMessage());
 		}
+	};
+}
+
+function generateMessage() {
+	return {
+		amin: MJE.amin,
+		amax: MJE.amax,
+		bmin: MJE.bmin,
+		bmax: MJE.bmax,
+		row: --MJE.rows,
+		type: MJE.type,
+		width: MJE.width,
+		height: MJE.height,
+		divergesColor: MJE.divergesColor,
+		convergesColor: MJE.convergesColor,
+		darkToLight: MJE.darkToLight,
+		ca: MJE.ca,
+		cb: MJE.cb
 	};
 }
