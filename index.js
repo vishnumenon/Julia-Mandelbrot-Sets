@@ -8,43 +8,43 @@ $(document).ready(function() {
 		MJE.height = $(window).height();
 		MJE.amin  = -2;
 		MJE.amax  = 2;
-		MJE.bmin  = -2;
-		MJE.bmax  = 2;
+		MJE.bmin  = (MJE.height / MJE.width) * -2;
+		MJE.bmax  = (MJE.height / MJE.width) * 2;
 		MJE.colors = {};
-		MJE.divergesColor1 = [255,255,255,255];
-		MJE.divergesColor2 = [0,0,0,255];
-		MJE.convergesColor = [100,100,100,255];
+		MJE.darkToLight = false;
+		MJE.divergesColor = [244,244,244,255];
+		MJE.convergesColor = [255,58,0,255];
 		MJE.canvas = $('#explorer_graph')[0];
-		MJE.controlCanvas = $('#controls')[0];
 		MJE.ctx = MJE.canvas.getContext('2d');
-		MJE.cctx = MJE.controlCanvas.getContext('2d');
 		MJE.canvas.setAttribute('width', MJE.width);
 		MJE.canvas.setAttribute('height', MJE.height);
-		MJE.controlCanvas.setAttribute('width', MJE.width);
-		MJE.controlCanvas.setAttribute('height', MJE.height);
 		MJE.type = $('#equation').val();
-		MJE.drawing = false;
-		MJE.drawStart = {a: 0, b: 0};
+		MJE.ca = parseFloat($('#a').val());
+		MJE.cb = parseFloat($('#b').val());
 		MJE.redraw = function() { drawGraph(); };
 		MJE.reset = function() {
-			MJE.amin = -2;
-			MJE.amax = 2;
-			MJE.bmin = -2;
-			MJE.bmax = 2;
-			MJE.divergesColor1 = [255,255,255,255];
-			MJE.divergesColor2 = [0,0,0,255];
-			MJE.convergesColor = [100,100,100,255];
+			MJE.amin  = -2;
+			MJE.amax  = 2;
+			MJE.bmin  = (MJE.height / MJE.width) * -2;
+			MJE.bmax  = (MJE.height / MJE.width) * 2;
+			MJE.darkToLight = false;
+			MJE.divergesColor = [255,255,255,255];
+			MJE.convergesColor = [255,58,0,255];
 			drawGraph();
+		};
+		MJE.newEquation = function() {
+			document.location.reload(true);
 		};
 		$('#start').hide();
 		drawGraph();
 
 		gui = new dat.GUI();
-		gui.addColor(MJE, 'divergesColor1').listen();
-		gui.addColor(MJE, 'divergesColor2').listen();
+		gui.addColor(MJE, 'divergesColor').listen();
 		gui.addColor(MJE, 'convergesColor').listen();
+		gui.add(MJE, 'darkToLight');
 		gui.add(MJE, 'redraw');
 		gui.add(MJE, 'reset');
+		gui.add(MJE, 'newEquation');
 
 		return false;
 	});
@@ -56,28 +56,13 @@ $(document).ready(function() {
 			placeholder.src = url;
 		};
 	});
-	$('#controls').on('mousedown', function(e) {
-		MJE.drawing = true;
-		MJE.drawStart.x = e.pageX;
-		MJE.drawStart.y = e.pageY;
-		return false;
-	});
-	$('#controls').on('mousemove', function(e) {
-		if(MJE.drawing) {
-			MJE.cctx.clearRect(0,0,MJE.width, MJE.height);
-			MJE.cctx.globalAlpha = 0.3,
-			MJE.cctx.fillStyle = '#ffffff';
-			MJE.cctx.fillRect(Math.min(MJE.drawStart.x, e.pageX), Math.min(MJE.drawStart.y, e.pageY), Math.max(MJE.drawStart.x, e.pageX) - Math.min(MJE.drawStart.x, e.pageX), Math.max(MJE.drawStart.y, e.pageY) - Math.min(MJE.drawStart.y, e.pageY));
-		}
-	});
-	$('#controls').on('mouseup', function(e) {
-		MJE.amin = getA(Math.min(MJE.drawStart.x, e.pageX), MJE.amin, MJE.amax, MJE.width);
-		MJE.amax = getA(Math.max(MJE.drawStart.x, e.pageX), MJE.amin, MJE.amax, MJE.width);
-		MJE.bmin = getB(Math.max(MJE.drawStart.y, e.pageY), MJE.bmin, MJE.bmax, MJE.height);
-		MJE.bmax = getB(Math.min(MJE.drawStart.y, e.pageY), MJE.bmin, MJE.bmax, MJE.height);
-		MJE.cctx.clearRect(0,0,MJE.width, MJE.height);
-		MJE.drawing = false;
+	$('#explorer_graph').on('click', function(e){
+		MJE.amax = getA(e.pageX, MJE.amin, MJE.amax, MJE.width) + 0.2 * (MJE.amax - MJE.amin);
+		MJE.amin = getA(e.pageX, MJE.amin, MJE.amax, MJE.width) - 0.2 * (MJE.amax - MJE.amin);
+		MJE.bmax = getB(e.pageY, MJE.bmin, MJE.bmax, MJE.height) + 0.2 * (MJE.bmax - MJE.bmin);
+		MJE.bmin = getB(e.pageY, MJE.bmin, MJE.bmax, MJE.height) - 0.2 * (MJE.bmax - MJE.bmin);
 		drawGraph();
+
 	});
 });
 
@@ -91,7 +76,7 @@ function getB(y, min, max, height) {
 
 function drawGraph() {
 	MJE.rows = MJE.height;
-	for(var i = 0; i<10; i++) {
+	for(var i = 0; i<8; i++) {
 		var worker = new Worker("graphworker.js");
 		worker.addEventListener('message', createCallback(worker));
 		worker.postMessage({
@@ -103,9 +88,11 @@ function drawGraph() {
 			type: MJE.type,
 			width: MJE.width,
 			height: MJE.height,
-			divergesColor1: MJE.divergesColor1,
-			divergesColor2: MJE.divergesColor2,
-			convergesColor: MJE.convergesColor
+			divergesColor: MJE.divergesColor,
+			convergesColor: MJE.convergesColor,
+			darkToLight: MJE.darkToLight,
+			ca: MJE.ca,
+			cb: MJE.cb
 		});
 
 	}
@@ -127,9 +114,11 @@ function createCallback(worker) {
 				type: MJE.type,
 				width: MJE.width,
 				height: MJE.height,
-				divergesColor1: MJE.divergesColor1,
-				divergesColor2: MJE.divergesColor2,
-				convergesColor: MJE.convergesColor
+				divergesColor: MJE.divergesColor,
+				convergesColor: MJE.convergesColor,
+				darkToLight: MJE.darkToLight,
+				ca: MJE.ca,
+				cb: MJE.cb
 			});
 		}
 	};

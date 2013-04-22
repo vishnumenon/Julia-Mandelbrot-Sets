@@ -14,8 +14,6 @@
 	<div id="explorer">
 		<canvas id="explorer_graph">
 		</canvas>
-		<canvas id="controls">
-		</canvas>
 		<div id="toImage">
 			Img
 		</image>
@@ -25,6 +23,16 @@
 			<h2>
 				Mandelbrot / Julia Explorer
 			</h2>
+			<div id="info_text">
+				<h3>What is this?</h3>
+				Mandelbrot/Julia Explorer allows you to explore the infinite wonders of the <a href="http://en.wikipedia.org/wiki/Fractal">fractal</a>, an amazing mathematical constructs. Fractals are, in simple terms, geometric figures which exhibit <a href="http://en.wikipedia.org/wiki/Self-similarity">self-similarity</a>. This means that they look the same at different 'zoom levels'. If this isn't clear yet, you'll probably get a better understanding if you try it out. This tool allows you to zoom in to 2 different types of fractals,  the <a href="http://en.wikipedia.org/wiki/Julia_Sets">Julia Set</a> and the <a href="http://en.wikipedia.org/wiki/Mandelbrot_set">Mandelbrot Set</a>. These are arguably the most famous fractal designs, as well as the most beautiful. They are both defined by <a href="http://en.wikipedia.org/wiki/Recurrence_relation">recursive functions</a> in the <a href="http://en.wikipedia.org/wiki/Complex_number_plane">complex number plane</a>. Each set consists of all the complex numbers for which its corresponding function <a href="http://en.wikipedia.org/wiki/Convergent_series">converges</a>. For the Mandelbrot Set, the function is <i>z</i><sub><i>n</i>+1</sub> = <i>z</i><sub><i>n</i></sub><sup>2</sup> + <i>c</i>. This function is checked for convergence at each complex number, with z starting at 0+0i and c starting at the point being tested. The Julia set is similar, and closely related. It also uses the function <i>z</i><sub><i>n</i>+1</sub> = <i>z</i><sub><i>n</i></sub><sup>2</sup> + <i>c</i>, but in a different way. To form the Julia Set, test each complex point with the formula for convergence, but start z at the point being tested and use a complex constant for c. Different values of C will result in different Sets. Only values between -2 and 2 for both the real and imaginary parts of c will result in sets with non-zero length. To get started, try some of these c values: -0.4+0.6i, 0.285+0i, 0.285+0.01i, 0.45+0.1428i, -0.70176-0.3842i, -0.835-0.2321i, or -0.8+0.156i.
+				<br /> <br />
+				<h3> How do I use it? </h3>
+				Simply select either Mandelbrot or Julia Set, then select a C value (for Julia only). Once the Set has been drawn, click anywhere to zoom. Edit the colors from the dropdown controls in the upper right. Click 'redraw' after editing colors to redraw with the new colors. Click 'reset' to return to the initial zoom level and colors. Click 'newEquation' to return to this page. Press the 'Img' button in the lower right to open an image of the current drawing in a new page (fractals make great wallpapers). After many, many levels of zoom, the fractal may lose its self-similarity. This is not a property of the fractal, but rather a shortcoming of the technology used to display it.
+				<br /> <br />
+				<h3> How was this made? </h3>
+				Mandelbrot/Julia Explorer uses 100% HTML5/JS. The fractals are drawn on a canvas. WebWorkers are used to increase speed and responsiveness. Thanks to <a href="https://code.google.com/p/dat-gui">dat.GUI</a> and <a href="http://zeptojs.com/">Zepto.js</a>. <br /> <br /> Happy Fractaling!
+			</div>
 		</div>
 		<div id="chooser">
 			<div id="steps>"

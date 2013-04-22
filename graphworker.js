@@ -23,19 +23,26 @@ function getB(y, min, max, height) {
 	return ((height - y) * ((max - min)/height)) + min;
 }
 
-function getColor(c, d1, d2, c1) {
-	var z = new Complex(0,0);
+function getColor(c, dc, cc, d2l, type, jc) {
+	var z;
+	if(type == 'mandelbrot') {
+		z = new Complex(0,0);
+	} else {
+		z = c;
+		c = jc;
+	}
+
 	var counter = 0;
-	while(z.abs() < 2 && counter <= 100) {
-		if(counter === 100) {
-			return c1;
+	while(z.abs() < 2 && counter <= 50) {
+		if(counter === 50) {
+			return cc;
 		}
 		z = (z.squared()).plus(c);
 		counter++;
 	}
-	return [d1[0] + (counter / 100) * (d2[0] - d1[0]),
-		d1[1] + (counter / 100) * (d2[1] - d1[1]),
-		d1[2] + (counter / 100) * (d2[2] - d1[2]),
+	return [dc[0] + (counter / 50) * (d2l ? 200 : -200),
+		dc[1] + (counter / 50) * (d2l ? 200 : -200),
+		dc[2] + (counter / 50) * (d2l ? 200 : -200),
 		255];
 }
 
@@ -52,7 +59,12 @@ self.addEventListener('message', function(request) {
 	for(var i = 0; i < request.data.width; i++) {
 		color = getColor(new Complex(
 			getA(i, request.data.amin, request.data.amax, request.data.width),
-			getB(row, request.data.bmin, request.data.bmax, request.data.height)), request.data.divergesColor1, request.data.divergesColor2, request.data.convergesColor);
+			getB(row, request.data.bmin, request.data.bmax, request.data.height)),
+			request.data.divergesColor,
+			request.data.convergesColor,
+			request.data.darkToLight,
+			request.data.type,
+			new Complex(request.data.ca, request.data.cb));
 		data[4*i] = color[0];
 		data[4*i+1] = color[1];
 		data[4*i+2] = color[2];
